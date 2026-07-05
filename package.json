@@ -1,0 +1,36 @@
+{
+  "name": "bookstore-manager-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheRazorbill/Bookstore-Manager-CLI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/TheRazorbill/Bookstore-Manager-CLI/issues"
+  },
+  "homepage": "https://github.com/TheRazorbill/Bookstore-Manager-CLI#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "@types/pg": "^8.20.0",
+    "@types/readline-sync": "^1.4.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
