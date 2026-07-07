@@ -1,11 +1,10 @@
-import { AutorRepository } from "./repositories/AutorRepository";
+import { AutorController } from './controllers/AutorController';
 
-async function main() {
-  const autorRepository = new AutorRepository();
-  const result = await autorRepository.cadastrar({
-    nome: "Rahian",
-    nacionalidade: "Brasileiro",
-  });
-  console.log(result);
+async function bootstrap() {
+  console.log(' Inicializando BookStore Manager CLI...');
+  
+  const autorController = new AutorController();
+  await autorController.menuAutores();
 }
-main();
+
+bootstrap();
