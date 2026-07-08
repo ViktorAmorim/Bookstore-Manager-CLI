@@ -10,5 +10,11 @@ CREATE TABLE IF NOT EXISTS livros (
     genero VARCHAR(255) NOT NULL,
     autor_id INT NOT NULL,
     CONSTRAINT fk_autor FOREIGN KEY (autor_id) REFERENCES autores(id) ON DELETE CASCADE
+);
 
+CREATE TABLE IF NOT EXISTS clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    telefone VARCHAR(20)
 );
