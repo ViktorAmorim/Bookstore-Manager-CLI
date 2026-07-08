@@ -2,3 +2,13 @@ CREATE TABLE IF NOT EXISTS autores (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS livros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    quantidade INT NOT NULL DEFAULT 0,
+    genero VARCHAR(255) NOT NULL,
+    autor_id INT NOT NULL,
+    CONSTRAINT fk_autor FOREIGN KEY (autor_id) REFERENCES autores(id) ON DELETE CASCADE
+
+);
