@@ -12,3 +12,10 @@ export interface Livro {
   autor_id: number;
   autor_nome?: string;
 }
+
+export interface Cliente {
+  id?: number;
+  nome: string;
+  email: string;
+  telefone: string;
+}
