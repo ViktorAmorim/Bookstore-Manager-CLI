@@ -1,11 +1,11 @@
 //Temporario, usar como esqueleto para teste das CLI
-import { LivroController } from "./controllers/LivroController";
+  import { ClienteController } from "./controllers/ClienteController";
 
 async function main() {
   console.log(" Inicializando BookStore Manager CLI...");
 
-  const livroController = new LivroController();
-  await livroController.menuLivros();
+  const clienteController = new ClienteController();
+  await clienteController.menuClientes();
 }
 
 main();
