@@ -32,4 +32,9 @@ export class LivroRepository {
     const query = "DELETE FROM livros WHERE id = $1";
     await pool.query(query, [id]);
   }
+
+  async alterarEstoque(id: number, quantidade: number): Promise<void> {
+    const query = "UPDATE livros SET quantidade = $1 WHERE id = $2";
+    await pool.query(query, [quantidade, id]);
+  }
 }

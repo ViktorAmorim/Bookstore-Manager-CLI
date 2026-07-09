@@ -19,3 +19,15 @@ export interface Cliente {
   email: string;
   telefone: string;
 }
+
+export interface Emprestimo {
+  id?: number;
+  livro_id: number;
+  cliente_id: number;
+  data_emprestimo?: Date;
+  data_devolucao?: Date | null;
+  status?: string;
+
+  livro_titulo?: string;
+  cliente_nome?: string;
+}
