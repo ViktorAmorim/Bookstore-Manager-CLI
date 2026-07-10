@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS autores (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS livros (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) UNIQUE NOT NULL,
+    quantidade INT NOT NULL DEFAULT 0,
+    genero VARCHAR(255) NOT NULL,
+    autor_id INT NOT NULL,
+    CONSTRAINT fk_autor FOREIGN KEY (autor_id) REFERENCES autores(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    telefone VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS emprestimos (
+    id SERIAL PRIMARY KEY,
+    livro_id INT NOT NULL,
+    cliente_id INT NOT NULL,
+    data_emprestimo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_devolucao TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'ATIVO', -- 'ATIVO' ou 'DEVOLVIDO'
+    CONSTRAINT fk_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
+    CONSTRAINT fk_livro FOREIGN KEY (livro_id) REFERENCES livros(id) ON DELETE CASCADE
+);
