@@ -38,4 +38,11 @@ export class AutorService {
     }
     await this.autorRepository.deletarPorId(id);
   }
+
+  async atualizarAutor(id: number, nome: string, nacionalidade?: string): Promise<void> {
+    const autor = await this.autorRepository.buscarPorId(id);
+    if (!autor) throw new Error(`Autor com ID ${id} não encontrado.`);
+    if (!nome || nome.trim() === "") throw new Error("O nome do autor é obrigatório.");
+    await this.autorRepository.atualizar(id, nome.trim(), nacionalidade?.trim());
+  }
 }

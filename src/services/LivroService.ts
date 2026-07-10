@@ -62,4 +62,40 @@ export class LivroService {
     }
     await this.livroRepository.deletarPorId(id);
   }
+
+  async atualizarLivro(
+    id: number,
+    titulo: string,
+    quantidade: number,
+    genero: string,
+    autor_id: number
+  ): Promise<void> {
+    const livro = await this.livroRepository.buscarPorId(id);
+    if (!livro) {
+      throw new Error(`Livro com ID ${id} não encontrado.`);
+    }
+
+    if (!titulo || titulo.trim() === "") {
+      throw new Error("O titulo do livro é obrigatório.");
+    }
+
+    if (quantidade < 0) {
+      throw new Error("A quantidade do livro deve ser maior ou igual a zero.");
+    }
+
+    if (!genero || genero.trim() === "") {
+      throw new Error("O genero do livro é obrigatório.");
+    }
+
+    if (autor_id <= 0) {
+      throw new Error("O autor_id do livro é invalido.");
+    }
+
+    const autorExistente = await this.autorService.buscarAutorPorId(autor_id);
+    if (!autorExistente) {
+      throw new Error(`Autor com ID ${autor_id} nao encontrado.`);
+    }
+
+    await this.livroRepository.atualizar(id, titulo.trim(), quantidade, genero.trim(), autor_id);
+  }
 }

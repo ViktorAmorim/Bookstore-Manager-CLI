@@ -37,4 +37,9 @@ export class LivroRepository {
     const query = "UPDATE livros SET quantidade = $1 WHERE id = $2";
     await pool.query(query, [quantidade, id]);
   }
+
+  async atualizar(id: number, titulo: string, quantidade: number, genero: string, autor_id: number): Promise<void> {
+    const query = "UPDATE livros SET titulo = $1, quantidade = $2, genero = $3, autor_id = $4 WHERE id = $5";
+    await pool.query(query, [titulo, quantidade, genero, autor_id, id]);
+  }
 }
