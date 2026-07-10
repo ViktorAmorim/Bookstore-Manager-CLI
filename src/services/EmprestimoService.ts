@@ -34,6 +34,8 @@ export class EmprestimoService {
       throw new Error("Este cliente já possui um empréstimo ativo deste livro.");
     }
     const novaQuantidade = livro.quantidade - 1;
+
+    await this.livroRepository.alterarEstoque(livroId, novaQuantidade);
     return await this.emprestimoRepository.cadastrar(livroId, clienteId);
   }
 
@@ -44,6 +46,10 @@ export class EmprestimoService {
     }
 
     await this.emprestimoRepository.registrarDevolucao(emprestimoAtivo.id!);
+    const livro = await this.livroRepository.buscarPorId(livroId);
+    if (livro) {
+      await this.livroRepository.alterarEstoque(livroId, livro.quantidade + 1);
+    }
   }
 
   async listarEmprestimos(): Promise<Emprestimo[]> {
