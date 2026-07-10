@@ -1,5 +1,6 @@
 import * as readline from "readline-sync";
 import { LivroService } from "../services/LivroService";
+import { obterTextoObrigatorio, obterNumeroPositivo, obterNumeroNaoNegativo } from "../utils";
 
 export class LivroController {
   private livroService: LivroService;
@@ -27,30 +28,10 @@ export class LivroController {
       try {
         switch (opcao) {
           case "1":
-            let titulo = readline.question("Titulo do Livro: ");
-            while(!titulo) {
-              console.log("Titulo do livro é obrigatório.");
-              titulo = readline.question("Titulo do Livro: ");
-            }
-            let quantidade = parseInt(readline.question("Quantidade do Livro: "), 10);
-            while(!quantidade) {
-              console.log("Quantidade do livro é obrigatória.");
-              quantidade = parseInt(readline.question("Quantidade do Livro: "), 10);
-            }
-            while(Number.isNaN(quantidade) || quantidade <= 0) {
-              console.log("Quantidade do livro deve ser um número positivo.");
-              quantidade = parseInt(readline.question("Quantidade do Livro: "), 10);
-            }
-            let genero = readline.question("Genero do Livro: ");
-            while(!genero) {
-              console.log("Genero do livro é obrigatório.");
-              genero = readline.question("Genero do Livro: ");
-            }
-            let autor_id = parseInt(readline.question("ID do Autor: "), 10);
-            while(!autor_id) {
-              console.log("ID do autor é obrigatório.");
-              autor_id = parseInt(readline.question("ID do Autor: "), 10);
-            }
+            const titulo = obterTextoObrigatorio("Titulo do Livro: ", "Titulo do livro é obrigatório.");
+            const quantidade = obterNumeroNaoNegativo("Quantidade do Livro: ", "Quantidade do livro deve ser um número maior ou igual a zero.");
+            const genero = obterTextoObrigatorio("Genero do Livro: ", "Genero do livro é obrigatório.");
+            const autor_id = obterNumeroPositivo("ID do Autor: ", "ID do autor é obrigatório e deve ser um número positivo.");
 
             const novoLivro = await this.livroService.cadastrarLivro(
               titulo,
@@ -70,11 +51,7 @@ export class LivroController {
             }
             break;
           case "3":
-            let idLivro = parseInt(readline.question("ID do Livro: "), 10);
-            while (!idLivro) {
-              console.log("ID do livro é obrigatório.");
-              idLivro = parseInt(readline.question("ID do Livro: "), 10);
-            }
+            const idLivro = obterNumeroPositivo("ID do Livro: ", "ID do livro é obrigatório.");
             const livroExistente =
               await this.livroService.buscarLivroPorId(idLivro);
             if (livroExistente) {
@@ -84,28 +61,30 @@ export class LivroController {
             }
             break;
           case "4":
-            let idDeletar = parseInt(readline.question("ID do Livro a ser deletado: "), 10);
-            while (!idDeletar) {
-              console.log("ID do livro é obrigatório.");
-              idDeletar = parseInt(readline.question("ID do Livro a ser deletado: "), 10);
-            }
+            const idDeletar = obterNumeroPositivo("ID do Livro a ser deletado: ", "ID do livro é obrigatório.");
             await this.livroService.removerLivroPorId(idDeletar);
             console.log(`\n Livro com ID ${idDeletar} deletado com sucesso.`);
             break;
           case "5":
             console.log("\n Atualizando livro...");
-            let idAtualizar = parseInt(readline.question("Digite o ID do Livro: "), 10);
-            while (!idAtualizar) {
-              console.log("ID do livro é obrigatório.");
-              idAtualizar = parseInt(readline.question("Digite o ID do Livro: "), 10);
-            }
+            const idAtualizar = obterNumeroPositivo("Digite o ID do Livro: ", "ID do livro é obrigatório.");
             const livroAtualizar = await this.livroService.buscarLivroPorId(idAtualizar);
             if (livroAtualizar) {
-              const novoTitulo = readline.question("Digite o novo título: ");
-              const novaQuantidade = readline.questionInt("Digite a nova quantidade: ");
-              const novoGenero = readline.question("Digite o novo gênero: ");
-              const novoAutorId = readline.questionInt("Digite o novo ID do Autor: ");
-              await this.livroService.atualizarLivro(idAtualizar, novoTitulo, novaQuantidade, novoGenero, novoAutorId);
+              const novoTitulo = readline.question("Digite o novo título (deixe vazio para não alterar): ");
+              const novaQuantidadeStr = readline.question("Digite a nova quantidade (deixe vazio para não alterar): ");
+              const novoGenero = readline.question("Digite o novo gênero (deixe vazio para não alterar): ");
+              const novoAutorIdStr = readline.question("Digite o novo ID do Autor (deixe vazio para não alterar): ");
+
+              const novaQuantidade = novaQuantidadeStr !== "" ? parseInt(novaQuantidadeStr, 10) : livroAtualizar.quantidade;
+              const novoAutorId = novoAutorIdStr !== "" ? parseInt(novoAutorIdStr, 10) : livroAtualizar.autor_id;
+
+              await this.livroService.atualizarLivro(
+                idAtualizar, 
+                novoTitulo || livroAtualizar.titulo, 
+                novaQuantidade, 
+                novoGenero || livroAtualizar.genero, 
+                novoAutorId
+              );
               console.log(`\n Livro com ID ${idAtualizar} atualizado com sucesso.`);
             } else {
               console.log(`\n Livro com ID ${idAtualizar} não encontrado.`);

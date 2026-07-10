@@ -1,5 +1,6 @@
 import * as readline from "readline-sync";
 import { AutorService } from "../services/AutorService";
+import { obterTextoObrigatorio, obterNumeroPositivo } from "../utils";
 
 export class AutorController {
   private autorService: AutorService;
@@ -28,11 +29,7 @@ export class AutorController {
       try {
         switch (opcao) {
           case "1":
-            let nome = readline.question("Nome do Autor: ");
-            while(!nome) {
-              console.log("Nome do autor é obrigatório.");
-              nome = readline.question("Nome do Autor: ");
-            }
+            const nome = obterTextoObrigatorio("Nome do Autor: ", "Nome do autor é obrigatório.");
             const nacionalidade = readline.question(
               "Nacionalidade (opcional): ",
             );
@@ -52,36 +49,23 @@ export class AutorController {
             }
             break;
           case "3":
-            let id = parseInt(readline.question("Digite o ID do Autor: "), 10);
-            while (!id) {
-              console.log("ID do autor é obrigatório.");
-              id = parseInt(readline.question("Digite o ID do Autor: "), 10);
-            }
+            const id = obterNumeroPositivo("Digite o ID do Autor: ", "ID do autor é obrigatório.");
             const autor = await this.autorService.buscarAutorPorId(id);
             console.table([autor]);
             break;
           case "4":
-            let idDeletar = parseInt(readline.question("Digite o ID do Autor a ser deletado: "), 10);
-            while (!idDeletar) {
-              console.log("ID do autor é obrigatório.");
-              idDeletar = parseInt(readline.question("Digite o ID do Autor a ser deletado: "), 10);
-            }
+            const idDeletar = obterNumeroPositivo("Digite o ID do Autor a ser deletado: ", "ID do autor é obrigatório.");
             await this.autorService.deletarAutorPorId(idDeletar);
             console.log(`\n Autor com ID ${idDeletar} deletado com sucesso.`);
             break;
           case "5":
             console.log("\n Atualizando autor...");
-            let idAtualizar = parseInt(readline.question("Digite o ID do Autor: "), 10);
-            while (!idAtualizar) {
-              console.log("ID do autor é obrigatório.");
-              const idAtualizarInput = readline.question("Digite o ID do Autor: ");
-              idAtualizar = parseInt(idAtualizarInput, 10);
-            }
+            const idAtualizar = obterNumeroPositivo("Digite o ID do Autor: ", "ID do autor é obrigatório.");
             const autorAtualizar = await this.autorService.buscarAutorPorId(idAtualizar);
             if (autorAtualizar) {
-              const novoNome = readline.question("Digite o novo nome: ");
-              const novaNacionalidade = readline.question("Digite a nova nacionalidade (opcional): ");
-              await this.autorService.atualizarAutor(idAtualizar, novoNome, novaNacionalidade);
+              const novoNome = readline.question("Digite o novo nome (deixe vazio para não alterar): ");
+              const novaNacionalidade = readline.question("Digite a nova nacionalidade (opcional, deixe vazio para não alterar): ");
+              await this.autorService.atualizarAutor(idAtualizar, novoNome || autorAtualizar.nome, novaNacionalidade || autorAtualizar.nacionalidade);
               console.log(`\n Autor com ID ${idAtualizar} atualizado com sucesso.`);
             } else {
               console.log(`\n Autor com ID ${idAtualizar} não encontrado.`);
