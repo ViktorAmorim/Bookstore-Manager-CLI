@@ -26,4 +26,9 @@ export class AutorRepository {
     const query = "DELETE FROM autores WHERE id = $1";
     await pool.query(query, [id]);
   }
+
+  async atualizar(id: number, nome: string, nacionalidade?: string): Promise<void> {
+    const query = "UPDATE autores SET nome = $1, nacionalidade = $2 WHERE id = $3";
+    await pool.query(query, [nome, nacionalidade, id]);
+  }
 }
