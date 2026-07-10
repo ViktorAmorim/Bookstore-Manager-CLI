@@ -1,11 +1,10 @@
-//Temporario, usar como esqueleto para teste das CLI
-  import { EmprestimoController } from "./controllers/EmprestimoController";
+import { menuPrincipal } from "./menus/menuPrincipal";
 
 async function main() {
+  console.log("=".repeat(40));
   console.log(" Inicializando BookStore Manager CLI...");
 
-  const emprestimoController = new EmprestimoController();
-  await emprestimoController.menuEmprestimos();
+  await menuPrincipal();
 }
 
 main();
