@@ -1,5 +1,6 @@
 import * as readline from "readline-sync";
 import { ClienteService } from "../services/ClienteService";
+import { obterTextoObrigatorio, obterNumeroPositivo } from "../utils";
 
 export class ClienteController {
   private clienteService: ClienteService;
@@ -28,21 +29,9 @@ export class ClienteController {
       try {
         switch (opcao) {
           case "1":
-            let nome = readline.question("Nome do Cliente: ");
-            while (!nome || nome.trim() === "") {
-              console.log("O nome do cliente é obrigatório.");
-              nome = readline.question("Nome do Cliente: ");
-            }
-            let email = readline.question("Email: ");
-            while (!email || email.trim() === "") {
-              console.log("O email do cliente é obrigatório.");
-              email = readline.question("Email: ");
-            }
-            let telefone = readline.question("Telefone: ");
-            while (!telefone || telefone.trim() === "") {
-              console.log("O telefone do cliente é obrigatório.");
-              telefone = readline.question("Telefone: ");
-            }
+            const nome = obterTextoObrigatorio("Nome do Cliente: ", "O nome do cliente é obrigatório.");
+            const email = obterTextoObrigatorio("Email: ", "O email do cliente é obrigatório.");
+            const telefone = obterTextoObrigatorio("Telefone: ", "O telefone do cliente é obrigatório.");
             const novoCliente = await this.clienteService.cadastrarCliente(
               nome,
               email,
@@ -60,52 +49,30 @@ export class ClienteController {
             }
             break;
           case "3":
-            let id = parseInt(readline.question("Digite o ID do Cliente: "), 10);
-            while (Number.isNaN(id) || id <= 0) {
-              console.log("O ID do cliente deve ser um número positivo.");
-              const idInput = parseInt(readline.question("Digite o ID do Cliente: "), 10);
-              if (idInput > 0) id = idInput;
-            }
+            const id = obterNumeroPositivo("Digite o ID do Cliente: ", "O ID do cliente deve ser um número positivo.");
             const cliente = await this.clienteService.buscarClientePorId(id);
             console.table([cliente]);
             break;
           case "4":
-            let idDeletar = parseInt(readline.question("Digite o ID do Cliente a ser deletado: "), 10);
-            while (Number.isNaN(idDeletar) || idDeletar <= 0) {
-              console.log("O ID do cliente deve ser um número positivo.");
-              const idInput = parseInt(readline.question("Digite o ID do Cliente: "), 10);
-              if (idInput > 0) idDeletar = idInput;
-            }
+            const idDeletar = obterNumeroPositivo("Digite o ID do Cliente a ser deletado: ", "O ID do cliente deve ser um número positivo.");
             await this.clienteService.deletarClientePorId(idDeletar);
             console.log(`\n Cliente com ID ${idDeletar} deletado com sucesso.`);
             break;
           case "5":
             console.log("\n Atualizando cliente...");
-            let idAtualizar = parseInt(readline.question("Digite o ID do Cliente: "), 10);
-            while (Number.isNaN(idAtualizar) || idAtualizar <= 0) {
-              console.log("O ID do cliente deve ser um número positivo.");
-              const idInput = parseInt(readline.question("Digite o ID do Cliente: "), 10);
-              if (idInput > 0) idAtualizar = idInput;
-            }
+            const idAtualizar = obterNumeroPositivo("Digite o ID do Cliente: ", "O ID do cliente deve ser um número positivo.");
             let clienteAtualizar = await this.clienteService.buscarClientePorId(idAtualizar);
             if (clienteAtualizar) {
-              let novoNome = readline.question("Digite o novo nome: ");
-              while (!novoNome || novoNome.trim() === "") {
-                console.log("O nome do cliente é obrigatório.");
-                novoNome = readline.question("Digite o novo nome: ");
-              }
-              let novoEmail = readline.question("Digite o novo email: ");
-              while (!novoEmail || novoEmail.trim() === "") {
-                console.log("O email do cliente é obrigatório.");
-                novoEmail = readline.question("Digite o novo email: ");
-              }
-              let novoTelefone = readline.question("Digite o novo telefone: ");
-              while (!novoTelefone || novoTelefone.trim() === "") {
-                console.log("O telefone do cliente é obrigatório.");
-                novoTelefone = readline.question("Digite o novo telefone: ");
-              }
-              await this.clienteService.atualizarCliente(idAtualizar, novoNome, novoEmail, novoTelefone);
-              console.log(`\n Cliente com ID ${idAtualizar} atualizado com sucesso.`);
+              const novoNome = readline.question("Digite o novo nome (deixe vazio para não alterar): ");
+              const novoEmail = readline.question("Digite o novo email (deixe vazio para não alterar): ");
+              const novoTelefone = readline.question("Digite o novo telefone (deixe vazio para não alterar): ");
+              await this.clienteService.atualizarCliente(
+                idAtualizar,
+                novoNome || clienteAtualizar.nome,
+                novoEmail || clienteAtualizar.email,
+                novoTelefone || clienteAtualizar.telefone
+              );
+              console.log(`\n Cliente com ID ${idAtualizar} updated com sucesso.`);
             } else {
               console.log(`\n Cliente com ID ${idAtualizar} não encontrado.`);
             }

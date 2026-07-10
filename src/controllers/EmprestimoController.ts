@@ -1,6 +1,6 @@
 import * as readline from 'readline-sync';
 import { EmprestimoService } from '../services/EmprestimoService';
-import { parse } from 'path/win32';
+import { obterNumeroPositivo } from '../utils';
 
 export class EmprestimoController {
   private emprestimoService: EmprestimoService;
@@ -28,26 +28,8 @@ export class EmprestimoController {
         switch (opcao) {
           case '1':
             console.log('\n=== REGISTRAR EMPRÉSTIMO ===');
-            let livroId = parseInt(readline.question('ID do Livro: '), 10);
-            do {
-              if (Number.isNaN(livroId)) {
-                console.log('Digite um número válido.');
-                livroId = parseInt(readline.question('ID do Livro: '), 10);
-              } else if (livroId <= 0) {
-                console.log('Digite um número positivo.');
-                livroId = parseInt(readline.question('ID do Livro: '), 10);
-               }
-            } while (Number.isNaN(livroId) || livroId <= 0);
-            let clienteId = parseInt(readline.question('ID do Cliente: '), 10);
-            do {
-              if (Number.isNaN(clienteId)) {
-                console.log('Digite um número válido.');
-                clienteId = parseInt(readline.question('ID do Cliente: '), 10);
-              } else if (clienteId <= 0) {
-                console.log('Digite um número positivo.');
-                clienteId = parseInt(readline.question('ID do Cliente: '), 10);
-              }
-            } while (Number.isNaN(clienteId) || clienteId <= 0);
+            const livroId = obterNumeroPositivo('ID do Livro: ', 'ID do livro inválido. Digite um número positivo.');
+            const clienteId = obterNumeroPositivo('ID do Cliente: ', 'ID do cliente inválido. Digite um número positivo.');
 
             const novoEmprestimo = await this.emprestimoService.realizarEmprestimo(livroId, clienteId);
             console.log(`\n Empréstimo registrado com sucesso! ID do Empréstimo: ${novoEmprestimo.id}`);
@@ -55,26 +37,8 @@ export class EmprestimoController {
 
           case '2':
             console.log('\n=== REGISTRAR DEVOLUÇÃO ===');
-            let livroIdDev = parseInt(readline.question('ID do Livro: '), 10);
-            do {
-              if (Number.isNaN(livroIdDev)) {
-                console.log('Digite um número válido.');
-                livroIdDev = parseInt(readline.question('ID do Livro: '), 10);
-              } else if (livroIdDev <= 0) {
-                console.log('Digite um número positivo.');
-                livroIdDev = parseInt(readline.question('ID do Livro: '), 10);
-              }
-            } while (Number.isNaN(livroIdDev) || livroIdDev <= 0);
-            let clienteIdDev = parseInt(readline.question('ID do Cliente: '), 10);
-            do {
-              if (Number.isNaN(clienteIdDev)) {
-                console.log('Digite um número válido.');
-                clienteIdDev = parseInt(readline.question('ID do Cliente: '), 10);
-              } else if (clienteIdDev <= 0) {
-                console.log('Digite um número positivo.');
-                clienteIdDev = parseInt(readline.question('ID do Cliente: '), 10);
-              }
-            } while (Number.isNaN(clienteIdDev) || clienteIdDev <= 0);
+            const livroIdDev = obterNumeroPositivo('ID do Livro: ', 'ID do livro inválido. Digite um número positivo.');
+            const clienteIdDev = obterNumeroPositivo('ID do Cliente: ', 'ID do cliente inválido. Digite um número positivo.');
 
             await this.emprestimoService.registrarDevolucao(livroIdDev, clienteIdDev);
             console.log('\n Devolução registrada com sucesso! Estoque atualizado.');
